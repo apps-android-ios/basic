@@ -1,5 +1,4 @@
 import React from 'react';
-import {StyleSheet, Image, View, Switch} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
@@ -8,27 +7,27 @@ import Product from '../screens/product';
 import CreatePost from '../screens/create-post';
 import Post from '../screens/post';
 import Account from '../screens/account';
+import Items from '../screens/food/items';
+import Categories from '../screens/food/categories';
 
-import {RootParamList} from '../types';
+import {RootParamList, FoodStoreParamList} from '../types';
 
-const Stake = createNativeStackNavigator<RootParamList>();
+const Root = createNativeStackNavigator<RootParamList>();
+const Tab = createNativeStackNavigator<FoodStoreParamList>();
 
-function LogoTitle() {
+function FoodStore() {
   return (
-    <View style={styles.imageContainer}>
-      <Image
-        style={styles.image}
-        source={require('../assets/logo.png')}
-        resizeMode="contain"
-      />
-    </View>
+    <Tab.Navigator initialRouteName="Categories">
+      <Tab.Screen name="Items" component={Items} />
+      <Tab.Screen name="Categories" component={Categories} />
+    </Tab.Navigator>
   );
 }
 
 export const RootNavigation = () => {
   return (
     <NavigationContainer>
-      <Stake.Navigator
+      <Root.Navigator
         initialRouteName="Home"
         screenOptions={{
           headerStyle: {
@@ -38,31 +37,18 @@ export const RootNavigation = () => {
             fontWeight: 'bold',
           },
         }}>
-        <Stake.Screen
-          name="Home"
-          component={Home}
-          options={{
-            headerTitle: () => <LogoTitle />,
-            headerRight: () => <Switch />,
-          }}
+        <Root.Screen name="Home" component={Home} />
+        <Root.Screen
+          name="FoodStore"
+          component={FoodStore}
+          options={{headerShown: false}}
         />
-        <Stake.Screen name="Product" component={Product} />
-        <Stake.Screen name="CreatePost" component={CreatePost} />
-        <Stake.Screen name="Post" component={Post} />
-        <Stake.Screen name="Account" component={Account} />
-      </Stake.Navigator>
+
+        <Root.Screen name="Product" component={Product} />
+        <Root.Screen name="CreatePost" component={CreatePost} />
+        <Root.Screen name="Post" component={Post} />
+        <Root.Screen name="Account" component={Account} />
+      </Root.Navigator>
     </NavigationContainer>
   );
 };
-
-const styles = StyleSheet.create({
-  imageContainer: {
-    width: 40,
-    height: 40,
-  },
-  image: {
-    width: '100%',
-    height: undefined,
-    aspectRatio: 1,
-  },
-});
