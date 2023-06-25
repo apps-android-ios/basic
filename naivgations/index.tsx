@@ -1,54 +1,34 @@
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import AntIcon from 'react-native-vector-icons/AntDesign';
 
+import {RootParamList} from '../types';
 import Home from '../screens/home';
-import Product from '../screens/product';
-import CreatePost from '../screens/create-post';
-import Post from '../screens/post';
-import Account from '../screens/account';
-import Items from '../screens/food/items';
-import Categories from '../screens/food/categories';
+import Setting from '../screens/setting';
 
-import {RootParamList, FoodStoreParamList} from '../types';
-
-const Root = createNativeStackNavigator<RootParamList>();
-const Tab = createNativeStackNavigator<FoodStoreParamList>();
-
-function FoodStore() {
-  return (
-    <Tab.Navigator initialRouteName="Categories">
-      <Tab.Screen name="Items" component={Items} />
-      <Tab.Screen name="Categories" component={Categories} />
-    </Tab.Navigator>
-  );
-}
+const Tab = createBottomTabNavigator<RootParamList>();
 
 export const RootNavigation = () => {
   return (
     <NavigationContainer>
-      <Root.Navigator
-        initialRouteName="Home"
-        screenOptions={{
-          headerStyle: {
-            backgroundColor: '#fff',
-          },
-          headerTitleStyle: {
-            fontWeight: 'bold',
-          },
-        }}>
-        <Root.Screen name="Home" component={Home} />
-        <Root.Screen
-          name="FoodStore"
-          component={FoodStore}
-          options={{headerShown: false}}
-        />
+      <Tab.Navigator
+        screenOptions={({route}) => ({
+          // eslint-disable-next-line react/no-unstable-nested-components
+          tabBarIcon: ({focused, color, size}) => {
+            let iconName;
 
-        <Root.Screen name="Product" component={Product} />
-        <Root.Screen name="CreatePost" component={CreatePost} />
-        <Root.Screen name="Post" component={Post} />
-        <Root.Screen name="Account" component={Account} />
-      </Root.Navigator>
+            if (route.name === 'Home') {
+              iconName = focused ? 'home' : 'home';
+            } else if (route.name === 'Setting') {
+              iconName = focused ? 'setting' : 'setting';
+            }
+            return <AntIcon name={iconName} color={color} size={size} />;
+          },
+        })}>
+        <Tab.Screen name="Home" component={Home} />
+        <Tab.Screen name="Setting" component={Setting} />
+      </Tab.Navigator>
     </NavigationContainer>
   );
 };
